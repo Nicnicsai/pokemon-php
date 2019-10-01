@@ -7,8 +7,17 @@ error_reporting(E_ALL);
 
 // 1st fetch
 $jsonData = file_get_contents("https://pokeapi.co/api/v2/pokemon/12");
-var_dump (json_decode($jsonData));
+$data = json_decode($jsonData);
 
+//getting the type of the pokemon (can be written easier?)
+$type = $data->types[0]->type->name;
+
+// get random number from 0 till 77 amount of moves
+$randomMove = mt_rand(0, count($data->moves));
+var_dump($randomMove);
+
+//access to one move
+var_dump ($data->moves[$randomMove]->move->name);
 ?>
 
 <!DOCTYPE html>
@@ -104,11 +113,17 @@ var_dump (json_decode($jsonData));
 
             <section>
                 <ul class="list-unstyled">
-                    <li><span class="font-weight-bold">ID:</span> <span id="id-nr"></span></li>
-                    <li><span class="font-weight-bold">Name:</span> <span id="name"></span></li>
-                    <li><span class="font-weight-bold">Type:</span> <span id="type"></span></li>
-                    <li><span class="font-weight-bold">Height:</span> <span id="height"></span></li>
-                    <li><span class="font-weight-bold">Weight:</span> <span id="weight"></span></li>
+                    <li><span class="font-weight-bold">ID:</span> <span id="id-nr"></span>
+                        <?php  echo "$data->id"; ?></li>
+                    <li><span class="font-weight-bold">Name:</span> <span id="name">
+                            <?php  echo "$data->name"; ?>
+                        </span></li>
+                    <li><span class="font-weight-bold">Type:</span> <span id="type"></span>
+                        <?php echo "$type"; ?> </li>
+                    <li><span class="font-weight-bold">Height:</span> <span id="height"></span>
+                        <?php  echo "$data->height" . " cm" ; ?></li>
+                    <li><span class="font-weight-bold">Weight:</span> <span id="weight"></span>
+                        <?php  echo "$data->weight" . " kg" ; ?></li>
 
 
                 </ul>
