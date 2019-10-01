@@ -4,20 +4,46 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+//if loop asking if there is something written in..
+
+// if not show "https://assets.pokemon.com/assets/cms2/img/misc/countries/be/country_detail_pokemon.png"
+
 
 // 1st fetch
+//check 132 less than four moves
 $jsonData = file_get_contents("https://pokeapi.co/api/v2/pokemon/12");
 $data = json_decode($jsonData);
 
 //getting the type of the pokemon (can be written easier?)
 $type = $data->types[0]->type->name;
 
-// get random number from 0 till 77 amount of moves
-$randomMove = mt_rand(0, count($data->moves));
-var_dump($randomMove);
 
-//access to one move
-var_dump ($data->moves[$randomMove]->move->name);
+// returns an array of random keys from the array
+$random = array_rand($data->moves, 4);
+//find four moves  ((make with for each blueButton)
+$move1 = $data->moves[$random[0]]->move->name;
+$move2 = $data->moves[$random[1]]->move->name;
+$move3 = $data->moves[$random[2]]->move->name;
+$move4 = $data->moves[$random[3]]->move->name;
+
+// get image source
+$imgPokemonFront = $data->sprites->front_default; //src url
+//echo "$imgPokemonFront";
+
+
+//fetch second time for previous evolution
+//previous evolution name
+
+$urlEvolution = $data->species->url; //url from evolution
+
+// 2nd fetch
+$jsonDataEvolution = file_get_contents("$urlEvolution");
+$dataEvolution = json_decode($jsonDataEvolution);
+
+var_dump($dataEvolution->evolves_from_species->name);
+$nameEvolution = $dataEvolution->evolves_from_species->name;
+
+
 ?>
 
 <!DOCTYPE html>
@@ -40,8 +66,6 @@ var_dump ($data->moves[$randomMove]->move->name);
     <div id="left">
         <div id="logo"></div>
         <div id="bg_curve1_left">
-
-
         </div>
 
 
@@ -73,7 +97,7 @@ var_dump ($data->moves[$randomMove]->move->name);
             </div>
             <div id="picture">
                 <img class="rounded" id="img-pokemon"
-                     src="https://assets.pokemon.com/assets/cms2/img/misc/countries/be/country_detail_pokemon.png"
+                     src="<?php echo $imgPokemonFront; ?>"
                      alt="psykokwak" height="160" width="235"/>
             </div>
             <div id="buttonbottomPicture"></div>
@@ -114,36 +138,40 @@ var_dump ($data->moves[$randomMove]->move->name);
             <section>
                 <ul class="list-unstyled">
                     <li><span class="font-weight-bold">ID:</span> <span id="id-nr"></span>
-                        <?php  echo "$data->id"; ?></li>
+                        <?php echo "$data->id"; ?></li>
                     <li><span class="font-weight-bold">Name:</span> <span id="name">
-                            <?php  echo "$data->name"; ?>
+                            <?php echo "$data->name"; ?>
                         </span></li>
                     <li><span class="font-weight-bold">Type:</span> <span id="type"></span>
                         <?php echo "$type"; ?> </li>
                     <li><span class="font-weight-bold">Height:</span> <span id="height"></span>
-                        <?php  echo "$data->height" . " cm" ; ?></li>
+                        <?php echo "$data->height" . " cm"; ?></li>
                     <li><span class="font-weight-bold">Weight:</span> <span id="weight"></span>
-                        <?php  echo "$data->weight" . " kg" ; ?></li>
+                        <?php echo "$data->weight" . " kg"; ?></li>
 
 
                 </ul>
             </section>
         </div>
         <div class="text-center text-white" id="blueButtons1">
-            <div class="blueButton"></div>
-            <div class="blueButton"></div>
+            <div class="blueButton">
+                <?php echo "$move1"; ?>
+            </div>
+            <div class="blueButton"><?php echo "$move2"; ?></div>
 
         </div>
         <div class="text-center text-white" id="blueButtons2">
-            <div class="blueButton"></div>
-            <div class="blueButton"></div>
+            <div class="blueButton"><?php echo "$move3"; ?></div>
+            <div class="blueButton"><?php echo "$move4"; ?></div>
 
         </div>
         <div id="miniButtonGlass4"></div>
         <div id="miniButtonGlass5"></div>
         <div id="barbutton3"></div>
         <div id="barbutton4"></div>
-        <div class="text-center font-weight-bold" id="yellowBox1"><span id="prev-name"></span></div>
+        <div class="text-center font-weight-bold" id="yellowBox1"><span
+                    id="prev-name"><?php echo $nameEvolution; ?></span>
+        </div>
         <div id="yellowBox2"><span id="img-span"><img id="prev-img" src="" alt=""> </span></div>
         <div id="bg_curve1_right">
 
@@ -155,11 +183,11 @@ var_dump ($data->moves[$randomMove]->move->name);
 
             <div class="container ">
                 <div class="d-flex justify-content-center ">
-                    <div class="searchbar">
+                    <form class="searchbar">
                         <input id="user-input" class="search_input" type="text" name="" placeholder="Pokemon name/id">
                         <button type=submit id="btn-search" class="search_icon"><i class="fas fa-search"><img
                                         id="icon-search" src="assets/ball.png" alt="icon-search"> </i></button>
-                    </div>
+                    </form>
                 </div>
             </div>
 
@@ -167,7 +195,6 @@ var_dump ($data->moves[$randomMove]->move->name);
     </div>
 
 </div>
-
 
 
 </body>
