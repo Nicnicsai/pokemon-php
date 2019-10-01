@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 // if not show "https://assets.pokemon.com/assets/cms2/img/misc/countries/be/country_detail_pokemon.png"
 
 
-// 1st fetch
+// FETCH ONE
 //check 132 less than four moves
 $jsonData = file_get_contents("https://pokeapi.co/api/v2/pokemon/12");
 $data = json_decode($jsonData);
@@ -36,13 +36,20 @@ $imgPokemonFront = $data->sprites->front_default; //src url
 
 $urlEvolution = $data->species->url; //url from evolution
 
-// 2nd fetch
+// FETCH TWO
 $jsonDataEvolution = file_get_contents("$urlEvolution");
 $dataEvolution = json_decode($jsonDataEvolution);
 
-var_dump($dataEvolution->evolves_from_species->name);
+//var_dump($dataEvolution);
 $nameEvolution = $dataEvolution->evolves_from_species->name;
 
+
+//FETCH THREE
+
+$jsonDataPrev = file_get_contents("https://pokeapi.co/api/v2/pokemon/$nameEvolution");
+$dataPrev = json_decode($jsonDataPrev);
+
+$imgPrevEv = $dataPrev->sprites->front_default;
 
 ?>
 
@@ -172,7 +179,7 @@ $nameEvolution = $dataEvolution->evolves_from_species->name;
         <div class="text-center font-weight-bold" id="yellowBox1"><span
                     id="prev-name"><?php echo $nameEvolution; ?></span>
         </div>
-        <div id="yellowBox2"><span id="img-span"><img id="prev-img" src="" alt=""> </span></div>
+        <div id="yellowBox2"><span id="img-span"><img id="prev-img" src="<?php echo $imgPrevEv; ?>" alt=""> </span></div>
         <div id="bg_curve1_right">
 
 
