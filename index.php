@@ -1,22 +1,51 @@
 <?php
 
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-//if loop asking if there is something written in..
+
+if (isset($_POST['pokeName'])) {
+    $input = $_POST['pokeName'];
+}
+
+
+
 
 // if not show "https://assets.pokemon.com/assets/cms2/img/misc/countries/be/country_detail_pokemon.png"
 
 
 // FETCH ONE
 //check 132 less than four moves
-$jsonData = file_get_contents("https://pokeapi.co/api/v2/pokemon/12");
+$jsonData = file_get_contents("https://pokeapi.co/api/v2/pokemon/$input");
 $data = json_decode($jsonData);
+
+
+
+//CAROUSEL
+$gallery = array();
+
+foreach ($data->sprites as $value) {
+array_push($gallery, $value);
+}
+//point to end of the array
+end($gallery);
+//fetch key of the last element of the array (so 7)
+$lastElementKey = key($gallery);
+//iterate the array
+
+var_dump($lastElementKey);
+//END CAROUSEL
+
+
+
+
 
 //getting the type of the pokemon (can be written easier?)
 $type = $data->types[0]->type->name;
 
+//IF LESS THAN FOUR MOVES SHOW ONLY AMOUNT
 
 // returns an array of random keys from the array
 $random = array_rand($data->moves, 4);
@@ -43,13 +72,19 @@ $dataEvolution = json_decode($jsonDataEvolution);
 //var_dump($dataEvolution);
 $nameEvolution = $dataEvolution->evolves_from_species->name;
 
+//ADD if no evolution then... write no evolution
+//IF no Prev evolution dont fetch third time and show berry png
 
 //FETCH THREE
 
 $jsonDataPrev = file_get_contents("https://pokeapi.co/api/v2/pokemon/$nameEvolution");
 $dataPrev = json_decode($jsonDataPrev);
 
+
+
 $imgPrevEv = $dataPrev->sprites->front_default;
+
+
 
 ?>
 
@@ -190,10 +225,12 @@ $imgPrevEv = $dataPrev->sprites->front_default;
 
             <div class="container ">
                 <div class="d-flex justify-content-center ">
-                    <form class="searchbar">
-                        <input id="user-input" class="search_input" type="text" name="" placeholder="Pokemon name/id">
+                    <form class="searchbar" action="index.php" method="post">
+                        <input id="user-input" class="search_input" type="text" name="pokeName" placeholder="Pokemon name/id">
                         <button type=submit id="btn-search" class="search_icon"><i class="fas fa-search"><img
-                                        id="icon-search" src="assets/ball.png" alt="icon-search"> </i></button>
+                                        id="icon-search" src="assets/ball.png" alt="icon-search"></i></button>
+
+                        <?php /*$_POST["pokeName"] */?>
                     </form>
                 </div>
             </div>
