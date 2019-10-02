@@ -1,20 +1,36 @@
 <?php
 
-
-ini_set('display_errors', 1);
+/*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
+
+/*
+//notes from livecode
+
+-declare strict types  > in error > "1" make string of it > because init requires it
+- php should come first
+-declare as many functions as possible at the top
+-require (fetches in memory) => mostly used
+-include (only if used inside of if)
+- it's good to use diffent files of php for groupwork
+- constant is made with define('FULL CAPITALS','url') are global
 
 
+
+
+*/
+
+
+
+//TO-DO: case insensitive  || less than four moves
+
+
+$input = 25;
 if (isset($_POST['pokeName'])) {
     $input = $_POST['pokeName'];
 }
 
-
-
-
 // if not show "https://assets.pokemon.com/assets/cms2/img/misc/countries/be/country_detail_pokemon.png"
-
 
 // FETCH ONE
 //check 132 less than four moves
@@ -22,12 +38,11 @@ $jsonData = file_get_contents("https://pokeapi.co/api/v2/pokemon/$input");
 $data = json_decode($jsonData);
 
 
-
 //CAROUSEL
 $gallery = array();
 
 foreach ($data->sprites as $value) {
-array_push($gallery, $value);
+    array_push($gallery, $value);
 }
 //point to end of the array
 end($gallery);
@@ -35,15 +50,12 @@ end($gallery);
 $lastElementKey = key($gallery);
 //iterate the array
 
-var_dump($lastElementKey);
 //END CAROUSEL
-
-
-
 
 
 //getting the type of the pokemon (can be written easier?)
 $type = $data->types[0]->type->name;
+
 
 //IF LESS THAN FOUR MOVES SHOW ONLY AMOUNT
 
@@ -60,29 +72,58 @@ $imgPokemonFront = $data->sprites->front_default; //src url
 //echo "$imgPokemonFront";
 
 
-//fetch second time for previous evolution
-//previous evolution name
-
 $urlEvolution = $data->species->url; //url from evolution
+
 
 // FETCH TWO
 $jsonDataEvolution = file_get_contents("$urlEvolution");
 $dataEvolution = json_decode($jsonDataEvolution);
 
-//var_dump($dataEvolution);
+
 $nameEvolution = $dataEvolution->evolves_from_species->name;
 
-//ADD if no evolution then... write no evolution
-//IF no Prev evolution dont fetch third time and show berry png
+
+
+
 
 //FETCH THREE
 
 $jsonDataPrev = file_get_contents("https://pokeapi.co/api/v2/pokemon/$nameEvolution");
 $dataPrev = json_decode($jsonDataPrev);
 
-
-
 $imgPrevEv = $dataPrev->sprites->front_default;
+
+function evolutionExists($dataPrev)
+{
+
+    $nameEvolutionCurrent = $dataPrev->species->name; //pichu
+    if (is_null($nameEvolutionCurrent) ) {
+
+        echo "Doesn't have evolution";
+    } else {
+        echo $nameEvolutionCurrent;
+
+    }
+
+}
+
+
+
+
+
+function evolutionExistsImg($imgPrevEv, $dataPrev)
+{
+    $nameEvolution = $dataPrev->species->name;
+
+    if (is_null($nameEvolution)) {
+
+        echo "assets/razz-berry.png"; //show berry image
+    } else {
+
+        echo $imgPrevEv;
+    }
+}
+
 
 
 
@@ -212,9 +253,17 @@ $imgPrevEv = $dataPrev->sprites->front_default;
         <div id="barbutton3"></div>
         <div id="barbutton4"></div>
         <div class="text-center font-weight-bold" id="yellowBox1"><span
-                    id="prev-name"><?php echo $nameEvolution; ?></span>
+                    id="prev-name"><?php
+                evolutionExists($dataPrev);
+                //echo $nameEvolution;
+
+                ?></span>
         </div>
-        <div id="yellowBox2"><span id="img-span"><img id="prev-img" src="<?php echo $imgPrevEv; ?>" alt=""> </span></div>
+        <div id="yellowBox2"><span id="img-span"><img id="prev-img" src="<?php
+                evolutionExistsImg($imgPrevEv, $dataPrev);
+                //echo $imgPrevEv;
+
+                ?>" alt=""> </span></div>
         <div id="bg_curve1_right">
 
 
@@ -226,11 +275,12 @@ $imgPrevEv = $dataPrev->sprites->front_default;
             <div class="container ">
                 <div class="d-flex justify-content-center ">
                     <form class="searchbar" action="index.php" method="post">
-                        <input id="user-input" class="search_input" type="text" name="pokeName" placeholder="Pokemon name/id">
+                        <input id="user-input" class="search_input" type="text" name="pokeName"
+                               placeholder="Pokemon name/id">
                         <button type=submit id="btn-search" class="search_icon"><i class="fas fa-search"><img
                                         id="icon-search" src="assets/ball.png" alt="icon-search"></i></button>
 
-                        <?php /*$_POST["pokeName"] */?>
+                        <?php /*$_POST["pokeName"] */ ?>
                     </form>
                 </div>
             </div>
