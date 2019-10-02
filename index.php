@@ -14,8 +14,8 @@ error_reporting(E_ALL);*/
 -include (only if used inside of if)
 - it's good to use diffent files of php for groupwork
 - constant is made with define('FULL CAPITALS','url') are global
-
-
+-(array) json file --> casting it
+-
 
 
 */
@@ -25,12 +25,15 @@ error_reporting(E_ALL);*/
 //TO-DO: case insensitive  || less than four moves
 
 
-$input = 25;
+$input = 25; // start with pikachu when page is opened
 if (isset($_POST['pokeName'])) {
     $input = $_POST['pokeName'];
 }
 
-// if not show "https://assets.pokemon.com/assets/cms2/img/misc/countries/be/country_detail_pokemon.png"
+if (empty($_POST['pokeName'])) { //user didn't fill in anything but sent it
+    $input = 25;
+}
+
 
 // FETCH ONE
 //check 132 less than four moves
@@ -62,6 +65,9 @@ $type = $data->types[0]->type->name;
 // returns an array of random keys from the array
 $random = array_rand($data->moves, 4);
 //find four moves  ((make with for each blueButton)
+
+//check Koenscode foreach powers
+
 $move1 = $data->moves[$random[0]]->move->name;
 $move2 = $data->moves[$random[1]]->move->name;
 $move3 = $data->moves[$random[2]]->move->name;
