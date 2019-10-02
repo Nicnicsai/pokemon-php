@@ -15,7 +15,8 @@ error_reporting(E_ALL);*/
 - it's good to use diffent files of php for groupwork
 - constant is made with define('FULL CAPITALS','url') are global
 -(array) json file --> casting it
--
+- if array_rand only gets one element its not an array, so need to cast it (change types) > (array) says its an array
+- ? -> make it nullable, not good practice, but it exists
 
 
 */
